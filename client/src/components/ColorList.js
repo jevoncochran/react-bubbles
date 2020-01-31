@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosWithAuth from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
@@ -14,6 +14,7 @@ const ColorList = ({ colors, updateColors }) => {
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
+    console.log(colorToEdit);
   };
 
   const saveEdit = e => {
@@ -21,6 +22,13 @@ const ColorList = ({ colors, updateColors }) => {
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+    axiosWithAuth()
+      .put(`colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log(res);
+        updateColors();
+      })
+      .catch(err => console.log(err))
   };
 
   const deleteColor = color => {
@@ -75,7 +83,7 @@ const ColorList = ({ colors, updateColors }) => {
             />
           </label>
           <div className="button-row">
-            <button type="submit">save</button>
+            <button type="submit" onClick={() => setColorToEdit(false)}>save</button>
             <button onClick={() => setEditing(false)}>cancel</button>
           </div>
         </form>
