@@ -11,11 +11,16 @@ const ColorList = props => {
   console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [newColor, setNewColor] = useState({
+    color: '',
+    code: { hex: ' '},
+    id: Date.now()
+  })
 
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
-    console.log(colorToEdit);
+    // console.log(color);
   };
 
   const saveEdit = e => {
@@ -26,17 +31,47 @@ const ColorList = props => {
     axiosWithAuth()
       .put(`/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
-        console.log(res);
+        // console.log(res);
         updateColors([
-          ...colors,
+          ...colors.filter(color => color.id !== colorToEdit.id), res.data
         ]);
+        setEditing(false);
       })
       .catch(err => console.log(err));
   };
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    axiosWithAuth()
+      .delete(`/colors/${color.id}`)
+      .then(res => {
+        console.log(res.data);
+        updateColors([
+          ...colors.filter(color => color.id !== res.data)
+        ])
+      })
+      .catch(err => console.log(err))
   };
+
+  const addColor = e => {
+    e.preventDefault();
+    axiosWithAuth()
+      .post('/colors/', newColor)
+      .then(res => {
+        console.log(res.data);
+        updateColors([
+          ...colors
+        ])
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleChanges = e => {
+    setNewColor({
+      ...newColor,
+      [e.target.name]: e.target.value
+    })
+  }
 
   return (
     <div className="colors-wrap">
@@ -92,7 +127,11 @@ const ColorList = props => {
         </form>
       )}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
+      <form onSubmit={addColor}>
+        <input type="text" name="color" placeholder="Enter color" onChange={handleChanges} />
+        <input type="code.hex" placeholder="Enter hex code" onChange={handleChanges} />
+        <button type="submit">Add new color</button>
+      </form>
     </div>
   );
 };
