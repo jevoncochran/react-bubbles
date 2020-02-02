@@ -10,6 +10,7 @@ export const ColorList = props => {
   const {colors, updateColors} = props;
   // console.log(colors);
   const [editing, setEditing] = useState(false);
+  const [addMode, setAddMode] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
   const [newColor, setNewColor] = useState({
     color: '',
@@ -61,6 +62,7 @@ export const ColorList = props => {
         ])
       })
       .catch(err => console.log(err))
+    setAddMode(false);
   }
 
   console.log(newColor);
@@ -118,19 +120,38 @@ export const ColorList = props => {
           </div>
         </form>
       )}
-        <form onSubmit={addColor}>
-          <label>
-            color name:
-            <input className="add-input" type="text" value={newColor.color} onChange={e => setNewColor({...newColor, color: e.target.value})} />
-          </label>
-          <label>
+      {!addMode && <button onClick={() => setAddMode(true)}>Add Color</button>}
+      {addMode && <form onSubmit={addColor}>
+        <legend>add color</legend>
+        <label>
+          color name:
+          <input
+            onChange={e =>
+              setNewColor({ ...newColor, color: e.target.value })
+            }
+            value={newColor.color}
+          />
+        </label>
+        <label>
           hex code:
-            <input className="add-input" type="text" value={newColor.code.hex} onChange={e => setNewColor({...newColor, code: { hex: e.target.value }})} />
-          </label>
-          <button type="submit">Add new color</button>
-        </form>
+          <input
+            onChange={e =>
+              setNewColor({
+                ...newColor,
+                code: { hex: e.target.value }
+              })
+            }
+            value={newColor.code.hex}
+          />
+        </label>
+        <div className="button-row">
+          <button type="submit">save</button>
+          <button onClick={() => setAddMode(false)}>cancel</button>
+        </div>
+      </form>}
       <div className="spacer" />
     </div>
   );
 };
+
 
