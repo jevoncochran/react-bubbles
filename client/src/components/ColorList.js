@@ -22,6 +22,7 @@ export const ColorList = props => {
     setEditing(true);
     setColorToEdit(color);
     // console.log(color);
+    setAddMode(false);
   };
 
   const saveEdit = e => {
@@ -120,8 +121,8 @@ export const ColorList = props => {
           </div>
         </form>
       )}
-      {!addMode && <button onClick={() => setAddMode(true)}>Add Color</button>}
-      {addMode && <form onSubmit={addColor}>
+      {!addMode && !editing && <button onClick={() => setAddMode(true)}>Add Color</button>}
+      {addMode && !editing && <form onSubmit={addColor}>
         <legend>add color</legend>
         <label>
           color name:
