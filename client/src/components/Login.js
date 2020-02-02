@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Login = props => {
+import loginImg from "../assets/user.svg";
+
+export const Login = props => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
   const [credentials, setCredentials] = useState({
@@ -37,15 +39,33 @@ const Login = props => {
   console.log(credentials);
 
   return (
-    <>
+    <div className="login">
       <h1>Welcome to the Bubble App!</h1>
-      <form onSubmit={submitLogin}>
-        <input type="text" name="username" placeholder="Please enter username" onChange={handleChanges} />
-        <input type="password" name="password" placeholder="Please enter password" onChange={handleChanges} />
-        <button type="submit">Login</button>
-      </form>
-    </>
+      <div className="base-container">
+        <div className="header">Login</div>
+        <div className="content">
+          <div className="image">
+            <img src={loginImg} />
+          </div>
+          <form className="login-form" onSubmit={submitLogin}>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input type="text" name="username" placeholder="username" onChange={handleChanges} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input className="password-input" type="password" name="password" placeholder="password" onChange={handleChanges} />
+            </div>
+            <div className="forgot-pw-div">
+              <p className="forgot-password">Forgot your password?</p>
+            </div>
+            <button className="btn" type="submit">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default Login;
+
+

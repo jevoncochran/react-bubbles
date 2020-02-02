@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-import Bubbles from "./Bubbles";
-import ColorList from "./ColorList";
+import { Bubbles, ColorList } from "./index";
 import axiosWithAuth from "../utils/axiosWithAuth";
 
-const BubblePage = () => {
+export const BubblePage = () => {
   const [colorList, setColorList] = useState([]);
   // console.log(colorList);
   // fetch your colors data from the server when the component mounts
@@ -27,4 +26,3 @@ const BubblePage = () => {
   );
 };
 
-export default BubblePage;

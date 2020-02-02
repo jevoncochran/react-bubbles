@@ -6,7 +6,7 @@ const initialColor = {
   code: { hex: "" }
 };
 
-const ColorList = props => {
+export const ColorList = props => {
   const {colors, updateColors} = props;
   // console.log(colors);
   const [editing, setEditing] = useState(false);
@@ -134,4 +134,3 @@ const ColorList = props => {
   );
 };
 
-export default ColorList;
