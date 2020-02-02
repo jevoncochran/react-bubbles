@@ -12,8 +12,12 @@ body,
 
 .App {
   font-family: "Montserrat", sans-serif;
+  display: flex;
   text-align: center;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 
   svg {
     height: 100%;
@@ -96,4 +100,8 @@ form {
     padding: 3px 8px;
     margin-top: 16px;
   }
+}
+
+.add-input {
+  font-size: 3rem;
 }

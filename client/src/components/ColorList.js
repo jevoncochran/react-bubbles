@@ -1,31 +1,71 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosWithAuth from "../utils/axiosWithAuth";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
+export const ColorList = props => {
+  const {colors, updateColors} = props;
+  // console.log(colors);
   const [editing, setEditing] = useState(false);
+  const [addMode, setAddMode] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [newColor, setNewColor] = useState({
+    color: '',
+    code: { hex: ''},
+    id: Date.now()
+  });
 
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
+    // console.log(color);
   };
 
   const saveEdit = e => {
     e.preventDefault();
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
+    axiosWithAuth()
+      .put(`/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        // console.log(res);
+        updateColors([
+          ...colors.filter(color => color.id !== colorToEdit.id), res.data
+        ]);
+        setEditing(false);
+      })
+      .catch(err => console.log(err));
   };
 
   const deleteColor = color => {
-    // make a delete request to delete this color
+    axiosWithAuth()
+      .delete(`/colors/${color.id}`)
+      .then(res => {
+        console.log(res.data);
+        updateColors([
+          ...colors.filter(color => color.id !== res.data)
+        ])
+      })
+      .catch(err => console.log(err))
   };
+
+  const addColor = e => {
+    console.log(newColor);
+    e.preventDefault();
+    axiosWithAuth()
+      .post('/colors/', newColor)
+      .then(res => {
+        console.log(res.data);
+        updateColors([
+          ...colors, newColor
+        ])
+      })
+      .catch(err => console.log(err))
+    setAddMode(false);
+  }
+
+  console.log(newColor);
 
   return (
     <div className="colors-wrap">
@@ -80,10 +120,38 @@ const ColorList = ({ colors, updateColors }) => {
           </div>
         </form>
       )}
+      {!addMode && <button onClick={() => setAddMode(true)}>Add Color</button>}
+      {addMode && <form onSubmit={addColor}>
+        <legend>add color</legend>
+        <label>
+          color name:
+          <input
+            onChange={e =>
+              setNewColor({ ...newColor, color: e.target.value })
+            }
+            value={newColor.color}
+          />
+        </label>
+        <label>
+          hex code:
+          <input
+            onChange={e =>
+              setNewColor({
+                ...newColor,
+                code: { hex: e.target.value }
+              })
+            }
+            value={newColor.code.hex}
+          />
+        </label>
+        <div className="button-row">
+          <button type="submit">save</button>
+          <button onClick={() => setAddMode(false)}>cancel</button>
+        </div>
+      </form>}
       <div className="spacer" />
-      {/* stretch - build another form here to add a color */}
     </div>
   );
 };
 
-export default ColorList;
+
